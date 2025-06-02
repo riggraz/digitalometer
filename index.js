@@ -26,6 +26,7 @@ const globalNumberOfUnlocksTodaySpan = document.getElementById('globalNumberOfUn
 const individualAvgDailyNumberOfUnlocksSpan = document.getElementById('individualAvgDailyNumberOfUnlocks');
 const interruptionsChartCanvas = document.getElementById('interruptionsChart');
 const lessInterruptionsChartCanvas = document.getElementById('lessInterruptionsChart');
+const usageByPlatformChartCanvas = document.getElementById('usageByPlatformChart');
 
 // --- Set subheader values --- //
 todayDateSpan.innerHTML = NOW.toLocaleDateString(LOCALE, {
@@ -170,7 +171,7 @@ new Chart(shortVsLongOnlineVideosChartCanvas, {
         max: 100
       }
     }
-  },
+  }
 });
 
 
@@ -221,7 +222,7 @@ new Chart(interruptionsChartCanvas, {
       }
     }
   }
-})
+});
 
 // Less unlocks/checks/interruptions chart
 const lessUnlocksArray = Array(1440).fill(0);
@@ -268,5 +269,65 @@ new Chart(lessInterruptionsChartCanvas, {
         }
       }
     }
+  }
+});
+
+// Daily average usage by platform chart
+new Chart(usageByPlatformChartCanvas, {
+  type: 'bar',
+  data: {
+    labels: [
+      'TikTok',
+      'YouTube',
+      'Instagram',
+      'Facebook',
+      'WhatsApp',
+      'imo',
+      'Telegram',
+      'X',
+      'Reddit',
+    ],
+    datasets: [{
+      label: 'Daily average usage',
+      data: [
+        95,
+        84,
+        70,
+        64,
+        60,
+        55,
+        31,
+        28,
+        21
+      ],
+      backgroundColor: [
+        'rgba(0, 0, 0, 0.6)',
+        'rgba(255, 0, 0, 0.6)',
+        'rgba(131, 58, 180, 0.6)',
+        'rgba(24, 119, 242, 0.6)',
+        'rgba(37, 211, 102, 0.6)',
+        'rgba(0, 174, 239, 0.6)',
+        'rgba(0, 136, 204, 0.6)',
+        'rgba(0, 0, 0, 0.6)',
+        'rgba(255, 69, 0, 0.6)'
+      ],
+      borderColor: [
+        'rgb(0, 0, 0)',
+        'rgb(255, 0, 0)',
+        'rgb(131, 58, 180)',
+        'rgb(24, 119, 242)',
+        'rgb(37, 211, 102)',
+        'rgb(0, 174, 239)',
+        'rgb(0, 136, 204)',
+        'rgb(0, 0, 0)',
+        'rgb(255, 69, 0)'
+      ],
+      borderWidth: 1,
+      barThickness: 25,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    aspectRatio: 0.75,
   }
 })
