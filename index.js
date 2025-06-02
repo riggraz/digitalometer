@@ -141,6 +141,8 @@ setInterval(function() {
 
 
 // Charts
+
+// Short VS Long videos chart
 const percShortOnlineVideosSeenToday = Math.round(globalShortOnlineVideosSeenToday / globalOnlineVideosSeenToday * 100);
 new Chart(shortVsLongOnlineVideosChartCanvas, {
   type: 'bar',

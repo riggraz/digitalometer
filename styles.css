@@ -81,7 +81,7 @@ header h1 {
 }
 
 .full-width img {
-  max-width: 400px;
+  max-width: 470px;
   height: auto;
   flex-shrink: 0;
 }
