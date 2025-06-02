@@ -1,10 +1,66 @@
-const now = new Date();
-const SECONDS_SINCE_MIDNIGHT = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+const FIRST_PUBLISH_DATE = new Date('2025-05-15');
+const NOW = new Date();
+const SECONDS_SINCE_MIDNIGHT = NOW.getHours() * 3600 + NOW.getMinutes() * 60 + NOW.getSeconds();
 const REFRESH_SPEED = 100; // refresh every x milliseconds
+const LOCALE = 'en-US';
+const STOCKTICKER_LOCALE_SETTINGS = { minimumFractionDigits: 2, maximumFractionDigits: 2 };
 
 // --- Get DOM elements --- //
+const todayDateSpan = document.getElementById('todayDate');
+const volumeNumberSpan = document.getElementById('volumeNumber');
+const issueNumberSpan = document.getElementById('issueNumber');
+
+const zkbgStockTickerSpan = document.getElementById('zkbgStockTicker');
+const wrldAttnStockTickerSpan = document.getElementById('wrldAttnStockTicker');
+const qltyTimeStockTickerSpan = document.getElementById('qltyTimeStockTicker');
+
 const globalSocialMediaUsageTodaySpan = document.getElementById('globalSocialMediaUsageToday');
 const individualSocialMediaUsageTodaySpan = document.getElementById('individualSocialMediaUsageToday');
+
+const globalOnlineVideosSeenTodaySpan = document.getElementById('globalOnlineVideosSeenToday');
+const globalShortOnlineVideosSeenTodaySpan = document.getElementById('globalShortOnlineVideosSeenToday');
+const globalLongOnlineVideosSeenTodaySpan = document.getElementById('globalLongOnlineVideosSeenToday');
+const shortVsLongOnlineVideosChartCanvas = document.getElementById('shortVsLongOnlineVideosChart');
+
+const globalNumberOfUnlocksTodaySpan = document.getElementById('globalNumberOfUnlocksToday');
+const individualAvgDailyNumberOfUnlocksSpan = document.getElementById('individualAvgDailyNumberOfUnlocks');
+const usageMotivationsChartCanvas = document.getElementById('usageMotivationsChart');
+
+// --- Set subheader values --- //
+todayDateSpan.innerHTML = NOW.toLocaleDateString(LOCALE, {
+  weekday: 'long',
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+});
+
+const volumeNumber = NOW.getFullYear() - FIRST_PUBLISH_DATE.getFullYear() + 1;
+volumeNumberSpan.innerHTML = volumeNumber;
+
+const issueNumber = Math.floor((NOW - FIRST_PUBLISH_DATE) / (1000 * 60 * 60 * 24)) % 365 + 1;
+issueNumberSpan.innerHTML = issueNumber;
+
+
+// --- Set stockticker values --- //
+const zkbgStockStartPrice = 7257.34;
+let zkbgStockActualPrice = zkbgStockStartPrice + 45.78;
+
+const wrldAttnStockStartPrice = 539.38;
+let wrldAttnStockActualPrice = wrldAttnStockStartPrice - 31.02;
+
+const qltyTimeStockStartPrice = 722.56;
+let qltyTimeStockActualPrice = qltyTimeStockStartPrice - 17.13;
+
+setInterval(function() {
+  zkbgStockActualPrice += Math.random();
+  zkbgStockTickerSpan.innerHTML = zkbgStockActualPrice.toLocaleString(LOCALE, STOCKTICKER_LOCALE_SETTINGS) + ' ▲ +' + (zkbgStockActualPrice - zkbgStockStartPrice).toFixed(2);
+
+  wrldAttnStockActualPrice -= Math.random();
+  wrldAttnStockTickerSpan.innerHTML = wrldAttnStockActualPrice.toLocaleString(LOCALE, STOCKTICKER_LOCALE_SETTINGS) + ' ▼ -' + (wrldAttnStockStartPrice - wrldAttnStockActualPrice).toFixed(2);
+
+  qltyTimeStockActualPrice -= Math.random();
+  qltyTimeStockTickerSpan.innerHTML = qltyTimeStockActualPrice.toLocaleString(LOCALE, STOCKTICKER_LOCALE_SETTINGS) + ' ▼ -' + (qltyTimeStockStartPrice - qltyTimeStockActualPrice).toFixed(2);
+}, 5000);
 
 // --- Data --- //
 const NUMBER_OF_SECONDS_IN_A_DAY = 24 * 60 * 60;
@@ -19,22 +75,132 @@ const PERC_WORLD_POPULATION_OVER_16 = 0.75;
 const PERC_WORLD_POPULATION_USING_SOCIAL_MEDIA_OVER_18 = 0.87;
 
 // SOCIAL MEDIA
-const WORLD_POPULATION_OVER_16_USING_SOCIAL_MEDIA = WORLD_POPULATION * PERC_WORLD_POPULATION_OVER_16 * PERC_WORLD_POPULATION_OVER_16;
+const WORLD_POPULATION_OVER_16_USING_SOCIAL_MEDIA = WORLD_POPULATION * PERC_WORLD_POPULATION_OVER_16 * PERC_WORLD_POPULATION_USING_SOCIAL_MEDIA_OVER_18;
 
 // Sources: https://datareportal.com/reports/digital-2025-april-global-statshot page 288 [accessed on 14 May 2025]
-const AVG_DAILY_SOCIAL_MEDIA_USAGE_OVER_16 = 9600 // seconds
+const AVG_DAILY_SOCIAL_MEDIA_USAGE_OVER_16 = 9600; // seconds
 
 const INDIVIDUAL_SOCIAL_MEDIA_USAGE_EACH_SECOND = AVG_DAILY_SOCIAL_MEDIA_USAGE_OVER_16 / NUMBER_OF_SECONDS_IN_A_DAY;
 const GLOBAL_SOCIAL_MEDIA_USAGE_EACH_SECOND = INDIVIDUAL_SOCIAL_MEDIA_USAGE_EACH_SECOND * WORLD_POPULATION_OVER_16_USING_SOCIAL_MEDIA;
+
+// ONLINE VIDEOS
+// Sources: https://datareportal.com/reports/digital-2025-april-global-statshot page 220 [accessed on 15 May 2025]
+const AVG_DAILY_SHORT_ONLINE_VIDEOS_SEEN_OVER_16 = 3403; // seconds
+
+// Sources: https://datareportal.com/reports/digital-2025-april-global-statshot page 224 [accessed on 15 May 2025]
+const AVG_DAILY_LONG_ONLINE_VIDEOS_SEEN_OVER_16 = 2537; // seconds
+
+const AVG_DAILY_ONLINE_VIDEOS_SEEN_OVER_16 = AVG_DAILY_SHORT_ONLINE_VIDEOS_SEEN_OVER_16 + AVG_DAILY_LONG_ONLINE_VIDEOS_SEEN_OVER_16; // seconds
+
+const GLOBAL_SHORT_ONLINE_VIDEOS_SEEN_EACH_SECOND = AVG_DAILY_SHORT_ONLINE_VIDEOS_SEEN_OVER_16 * WORLD_POPULATION_OVER_16_USING_SOCIAL_MEDIA / NUMBER_OF_SECONDS_IN_A_DAY;
+const GLOBAL_LONG_ONLINE_VIDEOS_SEEN_EACH_SECOND = AVG_DAILY_LONG_ONLINE_VIDEOS_SEEN_OVER_16 * WORLD_POPULATION_OVER_16_USING_SOCIAL_MEDIA / NUMBER_OF_SECONDS_IN_A_DAY;
+const GLOBAL_ONLINE_VIDEOS_SEEN_EACH_SECOND = GLOBAL_SHORT_ONLINE_VIDEOS_SEEN_EACH_SECOND + GLOBAL_LONG_ONLINE_VIDEOS_SEEN_EACH_SECOND;
+
+// UNLOCKS
+// Sources: https://www.androidauthority.com/phone-usage-habits-unlocking-poll-results-1182239/ (I took the middle points of ranges, and for >150 I just assumed 151 (conservative))
+const AVG_DAILY_NUMBER_OF_UNLOCKS = (25 * 0.2658) + (75 * 0.4354) + (125 * 0.1916) + (151 * 0.1072);
+
+const GLOBAL_NUMBER_OF_UNLOCKS_EACH_SECOND = AVG_DAILY_NUMBER_OF_UNLOCKS * WORLD_POPULATION_OVER_16_USING_SOCIAL_MEDIA / NUMBER_OF_SECONDS_IN_A_DAY;
+
+
+
 
 // LET'S GO
 let globalSocialMediaUsageToday = SECONDS_SINCE_MIDNIGHT * GLOBAL_SOCIAL_MEDIA_USAGE_EACH_SECOND;
 let individualSocialMediaUsageToday = SECONDS_SINCE_MIDNIGHT * INDIVIDUAL_SOCIAL_MEDIA_USAGE_EACH_SECOND;
 
+let globalOnlineVideosSeenToday = SECONDS_SINCE_MIDNIGHT * GLOBAL_ONLINE_VIDEOS_SEEN_EACH_SECOND;
+let globalShortOnlineVideosSeenToday = SECONDS_SINCE_MIDNIGHT * GLOBAL_SHORT_ONLINE_VIDEOS_SEEN_EACH_SECOND;
+let globalLongOnlineVideosSeenToday = SECONDS_SINCE_MIDNIGHT * GLOBAL_LONG_ONLINE_VIDEOS_SEEN_EACH_SECOND;
+
+let globalNumberOfUnlocksToday = SECONDS_SINCE_MIDNIGHT * GLOBAL_NUMBER_OF_UNLOCKS_EACH_SECOND;
+
+
+individualAvgDailyNumberOfUnlocksSpan.innerHTML = Math.round(AVG_DAILY_NUMBER_OF_UNLOCKS).toLocaleString(LOCALE);
+
 setInterval(function() {
   globalSocialMediaUsageToday += GLOBAL_SOCIAL_MEDIA_USAGE_EACH_SECOND / (1000 / REFRESH_SPEED);
-  globalSocialMediaUsageTodaySpan.innerHTML = Math.round(globalSocialMediaUsageToday / 60 / 60).toLocaleString();
+  globalSocialMediaUsageTodaySpan.innerHTML = Math.round(globalSocialMediaUsageToday / 60 / 60).toLocaleString(LOCALE);
 
   individualSocialMediaUsageToday += INDIVIDUAL_SOCIAL_MEDIA_USAGE_EACH_SECOND / (1000 / REFRESH_SPEED);
-  individualSocialMediaUsageTodaySpan.innerHTML = Math.round(individualSocialMediaUsageToday / 60).toLocaleString();
+  individualSocialMediaUsageTodaySpan.innerHTML = Math.round(individualSocialMediaUsageToday / 60).toLocaleString(LOCALE);
+
+  globalOnlineVideosSeenToday += GLOBAL_ONLINE_VIDEOS_SEEN_EACH_SECOND / (1000 / REFRESH_SPEED);
+  globalOnlineVideosSeenTodaySpan.innerHTML = Math.round(globalOnlineVideosSeenToday / 60 / 60).toLocaleString(LOCALE);
+
+  globalShortOnlineVideosSeenToday += GLOBAL_SHORT_ONLINE_VIDEOS_SEEN_EACH_SECOND / (1000 / REFRESH_SPEED);
+  globalShortOnlineVideosSeenTodaySpan.innerHTML = Math.round(globalShortOnlineVideosSeenToday / 60 / 60).toLocaleString(LOCALE);
+
+  globalLongOnlineVideosSeenToday += GLOBAL_LONG_ONLINE_VIDEOS_SEEN_EACH_SECOND / (1000 / REFRESH_SPEED);
+  globalLongOnlineVideosSeenTodaySpan.innerHTML = Math.round(globalLongOnlineVideosSeenToday / 60 / 60).toLocaleString(LOCALE);
+
+  globalNumberOfUnlocksToday += GLOBAL_NUMBER_OF_UNLOCKS_EACH_SECOND / (1000 / REFRESH_SPEED);
+  globalNumberOfUnlocksTodaySpan.innerHTML = Math.round(globalNumberOfUnlocksToday).toLocaleString(LOCALE);
 }, REFRESH_SPEED);
+
+
+// Charts
+const percShortOnlineVideosSeenToday = Math.round(globalShortOnlineVideosSeenToday / globalOnlineVideosSeenToday * 100);
+new Chart(shortVsLongOnlineVideosChartCanvas, {
+  type: 'bar',
+  data: {
+    labels: ['Short videos', 'Long videos'],
+    datasets: [{
+      label: '% of total',
+      data: [percShortOnlineVideosSeenToday, 100 - percShortOnlineVideosSeenToday],
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.6)',
+        'rgba(54, 162, 235, 0.6)',
+      ],
+      borderColor: [
+        'rgb(255, 99, 132)',
+        'rgb(54, 162, 235)',
+      ],
+      borderWidth: 1
+    }],
+  },
+  options: {
+    aspectRatio: 1,
+    scales: {
+      y: {
+        beginAtZero: true,
+        max: 100
+      }
+    }
+  },
+});
+
+new Chart(usageMotivationsChartCanvas, {
+  type: 'pie',
+  data: {
+    labels: [
+      'Productivity',
+      'Information',
+      'Communication',
+      'Entertainment',
+      'Social media',
+    ],
+    datasets: [{
+      label: '% of use',
+      data: [12.4, 22.7, 31.3, 18.7, 14.8],
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.6)',
+        'rgba(54, 162, 235, 0.6)',
+        'rgba(255, 206, 86, 0.6)',
+        'rgba(75, 192, 192, 0.6)',
+        'rgba(153, 102, 255, 0.6)'
+      ],
+      borderColor: [
+        'rgb(255, 99, 132)',
+        'rgb(54, 162, 235)',
+        'rgb(255, 206, 86)',
+        'rgb(75, 192, 192)',
+        'rgb(153, 102, 255)'
+      ],
+      borderWidth: 1
+    }],
+  },
+  options: {
+    aspectRatio: 1
+  }
+});

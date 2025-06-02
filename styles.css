@@ -18,6 +18,14 @@ body {
   margin: auto;
 }
 
+p {
+  margin-bottom: 1rem;
+}
+
+canvas {
+  margin: 2rem 0;
+}
+
 /* Header styles */
 header {
   text-align: center;
@@ -36,14 +44,22 @@ header h1 {
 
 /* Stock ticker */
 .stock-ticker {
-  border-top: 1px solid #000;
-  border-bottom: 1px solid #000;
+  border-top: 1px solid #2f2f2f;
+  border-bottom: 1px solid #2f2f2f;
   padding: 8px 0;
   text-align: center;
   margin: 20px 0;
   font-family: monospace;
   white-space: nowrap;
   overflow-x: auto;
+}
+
+#zkbgStockTicker {
+  color: green;
+}
+
+#wrldAttnStockTicker, #qltyTimeStockTicker {
+  color: rgb(225, 0, 0);
 }
 
 /* Grid layout */
@@ -90,7 +106,7 @@ header h1 {
 }
 
 .three-column article {
-  border-top: 1px solid #ddd;
+  border-top: 1px solid #2f2f2f;
   padding-top: 10px;
 }
 
@@ -117,5 +133,9 @@ header h1 {
 
   .article-left-image, .article-right-image {
     order: 1;
+  }
+
+  #shortVsLongOnlineVideosChart {
+    margin: 0 auto;
   }
 }
