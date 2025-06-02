@@ -24,7 +24,8 @@ const shortVsLongOnlineVideosChartCanvas = document.getElementById('shortVsLongO
 
 const globalNumberOfUnlocksTodaySpan = document.getElementById('globalNumberOfUnlocksToday');
 const individualAvgDailyNumberOfUnlocksSpan = document.getElementById('individualAvgDailyNumberOfUnlocks');
-const usageMotivationsChartCanvas = document.getElementById('usageMotivationsChart');
+const interruptionsChartCanvas = document.getElementById('interruptionsChart');
+const lessInterruptionsChartCanvas = document.getElementById('lessInterruptionsChart');
 
 // --- Set subheader values --- //
 todayDateSpan.innerHTML = NOW.toLocaleDateString(LOCALE, {
@@ -170,37 +171,100 @@ new Chart(shortVsLongOnlineVideosChartCanvas, {
   },
 });
 
-new Chart(usageMotivationsChartCanvas, {
-  type: 'pie',
+
+// Unlocks/checks/interruptions chart
+// Create an array of 1440 zeros (minutes in a day)
+const unlocksArray = Array(1440).fill(0);
+
+// Set 79 elements to 1, evenly spaced
+const unlocksCount = 79;
+for (let i = 0; i < unlocksCount; i++) {
+  const index = Math.round(i * (unlocksArray.length - 1) / (unlocksCount - 1));
+  unlocksArray[index] = 1;
+}
+
+new Chart(interruptionsChartCanvas, {
+  type: 'line',
   data: {
-    labels: [
-      'Productivity',
-      'Information',
-      'Communication',
-      'Entertainment',
-      'Social media',
-    ],
+    labels: Array.from({length: 1440}, (_, i) => i + 1), // minutes in a day
     datasets: [{
-      label: '% of use',
-      data: [12.4, 22.7, 31.3, 18.7, 14.8],
-      backgroundColor: [
-        'rgba(255, 99, 132, 0.6)',
-        'rgba(54, 162, 235, 0.6)',
-        'rgba(255, 206, 86, 0.6)',
-        'rgba(75, 192, 192, 0.6)',
-        'rgba(153, 102, 255, 0.6)'
-      ],
-      borderColor: [
-        'rgb(255, 99, 132)',
-        'rgb(54, 162, 235)',
-        'rgb(255, 206, 86)',
-        'rgb(75, 192, 192)',
-        'rgb(153, 102, 255)'
-      ],
-      borderWidth: 1
-    }],
+      label: 'Unlocks during the day',
+      data: unlocksArray,
+      borderColor: 'rgb(198, 94, 50)',
+      backgroundColor: 'rgba(198, 94, 50, 0.6)',
+      tension: 0.1,
+    }]
   },
   options: {
-    aspectRatio: 1
+    borderWidth: 1,
+    pointRadius: 1,
+    scales: {
+      y: {
+        title: {
+          display: true,
+          text: 'Unlock?'
+        },
+        ticks: {
+          display: false
+        }
+      },
+      x: {
+        title: {
+          display: true,
+          text: 'Minute of Day'
+        },
+        ticks: {
+          // display: false
+        }
+      }
+    }
   }
-});
+})
+
+// Less unlocks/checks/interruptions chart
+const lessUnlocksArray = Array(1440).fill(0);
+
+// Set 10 elements to 1, evenly spaced
+const lessUnlocksCount = 10;
+for (let i = 0; i < lessUnlocksCount; i++) {
+  const index = Math.round(i * (lessUnlocksArray.length - 1) / (lessUnlocksCount - 1));
+  lessUnlocksArray[index] = 1;
+}
+
+new Chart(lessInterruptionsChartCanvas, {
+  type: 'line',
+  data: {
+    labels: Array.from({length: 1440}, (_, i) => i + 1), // minutes in a day
+    datasets: [{
+      label: 'Unlocks during the day',
+      data: lessUnlocksArray,
+      borderColor: 'rgb(198, 94, 50)',
+      backgroundColor: 'rgba(198, 94, 50, 0.6)',
+      tension: 0.1,
+    }]
+  },
+  options: {
+    borderWidth: 1,
+    pointRadius: 1,
+    scales: {
+      y: {
+        title: {
+          display: true,
+          text: 'Unlock?'
+        },
+        ticks: {
+          display: false
+        }
+      },
+      x: {
+        title: {
+          display: true,
+          text: 'Minute of Day'
+        },
+        ticks: {
+          // display: false
+        }
+      }
+    }
+  }
+})
